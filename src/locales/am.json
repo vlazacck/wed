@@ -1,0 +1,163 @@
+{
+  "meta": {
+    "title": "ኤርምያስ እና ቤተልሔም — የተቀደሰ ውህደት",
+    "description": "ኤርምያስ እና ቤተልሔም በክርስቶስ አንድ ሆነው የሚቀላቀሉበትን በዓል ይቀላቀሉ። የሰርግ ግብዣ ፕሮግራም፣ ቦታ እና የመገኘት ማረጋገጫ ያካትታል።"
+  },
+  "header": {
+    "brand": "ኤ & ቤ"
+  },
+  "langToggle": {
+    "en": "EN",
+    "am": "አማ"
+  },
+  "envelope": {
+    "monogram": "ኤ & ቤ",
+    "tapToOpen": "ለመክፈት ይንኩ"
+  },
+  "hero": {
+    "eyebrow": "የሰርግ ቀን",
+    "date": "28/02/19",
+    "names": "ኤርምያስ\nእና\nቤተልሔም",
+    "scrollDown": "ወደ ታች ይውረዱ",
+    "verse": "«እግዚአብሔር ያጣመረውን ሰው አይለያየው።» — ማርቆስ 10፥9"
+  },
+  "welcome": {
+    "titleLine1": "ሁለት ነፍሶች",
+    "titleLine2": "አንድ ቃል ኪዳን",
+    "titleLine3": "በእግዚአብሔር የተጻፈ ውህደት",
+    "greeting": "ውድ ወዳጆቻችን እና ቤተሰቦች",
+    "body": "በክርስቶስ ጸጋ ተሳስረን ዘላለማዊ ጉዟችንን ስንጀምር በፍቅር፣ በምስጋና እና በማይረሱ ትዝታዎች የሚሞላውን ቀናችን ቀላቀሉን።",
+    "verseRef": "መዝሙር 150:6",
+    "verseText": "እስትንፋስ ያለው ሁሉ እግዚአብሔርን ያመስግን።ሃሌ ሉያ።"
+  },
+  "countdown": {
+    "title": "ሰርጉ የሚጀምረው በ",
+    "days": "ቀናት",
+    "hours": "ሰዓታት",
+    "minutes": "ደቂቃዎች",
+    "seconds": "ሰከንዶች",
+    "date": "ቅዳሜ ፣ ጥቅምት 28/2019"
+  },
+  "schedule": {
+    "title": "የፕሮግራም ዝርዝር",
+    "brideItems": [
+      {
+        "time": "11:00 ጠዋት",
+        "label": "የእንግዶች መቀበያ"
+      },
+      {
+        "time": "12:00 ከሰዓት",
+        "label": "ምሳ"
+      },
+      {
+        "time": "3:30 ከሰዓት",
+        "label": "ለሰርግ ሥነ ሥርዓቱ ወደ ቤተ ክርስቲያን መነሳት"
+      }
+    ],
+    "groomItems": [
+      {
+        "time": "11:00 ጠዋት",
+        "label": "የእንግዶች መቀበያ"
+      },
+      {
+        "time": "12:00 ከሰዓት",
+        "label": "ምሳ"
+      },
+      {
+        "time": "3:00 ከሰዓት",
+        "label": "ወደ ሙሽሪት ቤት መሄድ "
+      }
+    ]
+  },
+  "location": {
+    "title": "ቦታ",
+    "venueName": "Kotebe Muluwengel",
+    "address": "Kotebe 02፣ አዲስ አበባ፣ ኢትዮጵያ",
+    "openInMaps": "በካርታ ላይ ይክፈቱ",
+    "homeLocations": "የቤት ቦታዎች",
+    "bridesHome": "የሙሽሪት ቤት",
+    "groomsHome": "የሙሽራው ቤት"
+  },
+  "telegram": {
+    "title": "ፎቶዎችዎን ይላኩልን!",
+    "request": "ሰርጋችንን በእናንተ አይን ማየት እንወዳለን! እባክዎ ስለ ሠርጉ ላይ ያነሳቹኋቸውን ፎቶዎች እና ቪዲዮዎች በቴሌግራም ቦት ይላኩልን።",
+    "button": "ፎቶዎችን ይላኩልን"
+  },
+  "rsvp": {
+    "sealLabel": "የመገኘት ማረጋገጫ",
+    "clickToOpen": "ለመክፈት ይጫኑ",
+    "farewell": "እዚያ እናያችኋለን ብለን ተስፋ እናደርጋለን!",
+    "coupleNames": "ኤርምያስ እና ቤተልሔም",
+    "formTitle": "ይቀላቀሉናል?",
+    "nameLabel": "ሙሉ ስም",
+    "namePlaceholder": "ሙሉ ስምዎን ያስገቡ",
+    "phoneLabel": "የስልክ ቁጥር",
+    "phonePlaceholder": " 09XXXXXXXX",
+    "attendingLabel": "ይገኛሉ?",
+    "attendingYes": "በደስታ እቀበላለሁ",
+    "attendingNo": "በአክብሮት አልችልም",
+    "guestsLabel": "የእንግዶች ብዛት",
+    "messageLabel": "ለጥንዶቹ መልእክት",
+    "messagePlaceholder": "መልካም ምኞቶዎን ወይም  ለሙሽሮቹ መልእክቶዎን ይጻፉ",
+    "submit": "ማረጋገጫ ላክ",
+    "submitting": "በመላክ ላይ...",
+    "success": "እናመሰግናለን! ማረጋገጫዎ ደርሶናል።",
+    "error": "የሆነ ስህተት ተከስቷል። እባክዎ እንደገና ይሞክሩ።",
+    "requiredField": "ይህ መስክ ያስፈልጋል",
+    "invalidPhone": "እባክዎ ትክክለኛ የስልክ ቁጥር ያስገቡ"
+  },
+  "gallery": {
+    "title": "የማይረሱ ጊዜያቶቻችን",
+    "subtitle": "የፍቅራችን  ጉዞ በጥቂቱ ",
+    "prev": "ቀዳሚ ፎቶ",
+    "next": "ቀጣይ ፎቶ",
+    "goToSlide": "ወደ ፎቶ {{index}} ሂድ",
+    "autoplayPause": "ማጫወቻውን አቁም",
+    "autoplayResume": "ማጫወቻውን ቀጥል",
+    "viewFullscreen": "ሙሉ ምስል ይመልከቱ",
+    "closeFullscreen": "ዝጋ",
+    "items": [
+      {
+        "title": "የተቀደሰ ቃል ኪዳን",
+        "caption": "እጅ ለእጅ ተያይዘን፣ በእግዚአብሔር ጸጋ ዘላለማዊ ጉዟችንን ስንጀምር።"
+      },
+      {
+        "title": "የደስታ ፈገግታ",
+        "caption": "እያንዳንዱ ፈገግታ የእግዚአብሔርን ታላቅ ቸርነት ይመሰክራል።"
+      },
+      {
+        "title": "የወርቃማው ሰዓት ውበት",
+        "caption": "በእግዚአብሔር ፍቅር እና ተስፋ ብርሃን ስር የታደልንበት ቅጽበት።"
+      },
+      {
+        "title": "የዘላለም ቃል",
+        "caption": "በጸሎትና በምስጋና፣ ታሪካችንን የጻፈውን ጌታ እናከብራለን።"
+      },
+      {
+        "title": "አንድ ላይ መራመድ",
+        "caption": "በአንድ ልብና በአንድ መንገድ፣ በክንፎቹ ጥላ ስር የተዋሃደ ሕይወት።"
+      }
+    ]
+  },
+  "wishes": {
+    "eyebrow": "ምኞቶች",
+    "title": "የእንግዶች መልእክቶች",
+    "viewAll": "ሁሉንም መልእክቶች ይመልከቱ",
+    "modalTitle": "የወዳጅ ዘመድ መልካም ምኞቶች",
+    "modalSubtitle": "በወዳጅ እና በቤተሰቦቻችን የተጻፉ የበረከትና የፍቅር ቃላት",
+    "close": "ዝጋ",
+    "searchPlaceholder": "መልእክቶችን በስም ወይም በቃል ይፈልጉ...",
+    "noWishesFound": "ምንም መልእክት አልተገኘም።",
+    "noWishesYet": "እስካሁን ምንም መልእክት አልተተወም። ለሙሽሮቹ የመጀመሪያውን የበረከት መልእክት ይጻፉ!",
+    "totalWishes": "{{count}} መልእክቶች ደርሰውናል",
+    "leaveAWish": "በመገኘት ማረጋገጫው ላይ መልእክት ይጻፉ",
+    "loading": "መልእክቶች በመጫን ላይ..."
+  },
+  "footer": {
+    "verse": "«ከሁሉም በላይ ፍጹም የሚያስተሳስር ፍቅርን ልበሱ።» — ቆላስይስ 3፥14",
+    "contactTitle": "ጥያቄ አለዎት?",
+    "contactEmail": "ermias.bethelhem.@wedding.com",
+    "copyright": "© 2026 ኤርምያስ እና ቤተልሔም።",
+    "social": "ጉዟችንን ይከታተሉ"
+  }
+}
