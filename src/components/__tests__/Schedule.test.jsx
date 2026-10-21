@@ -27,6 +27,22 @@ describe('Schedule home-specific events', () => {
     ).toBeInTheDocument();
   });
 
+  it('puts the Amharic afternoon marker below the 3:30 time', async () => {
+    await i18n.changeLanguage('am');
+    const { container } = render(
+      <I18nextProvider i18n={i18n}>
+        <Schedule selectedHome="bride" />
+      </I18nextProvider>
+    );
+
+    const time = Array.from(container.querySelectorAll('li > span')).find(
+      (element) => element.textContent === '3:30\nከሰዓት'
+    );
+
+    expect(time).toBeInTheDocument();
+    expect(time).toHaveStyle({ whiteSpace: 'pre-line' });
+  });
+
   it("shows the groom schedule with departure for the bride's home at 3:00 PM", () => {
     render(
       <I18nextProvider i18n={i18n}>

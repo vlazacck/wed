@@ -148,6 +148,9 @@ export default function Schedule({ selectedHome = 'bride' }) {
                   fontSize: 'clamp(1.4rem, 3vw, 1.8rem)',
                   color: '#2D2D2D',
                   fontWeight: 500,
+                  whiteSpace: 'pre-line',
+                  display: 'inline-block',
+                  lineHeight: 1.2,
                 }}
               >
                 {item.time}
