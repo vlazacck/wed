@@ -13,7 +13,7 @@ function useTranslation() {
   };
 }
 
-const WEDDING_DATE = '26 . 07 . 2026';
+const WEDDING_DATE = '07 . 11 . 2026';
 
 export default function Envelope({ onOpening, onOpen }) {
   const { t } = useTranslation();
