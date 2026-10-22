@@ -61,7 +61,7 @@ export default function App() {
               selectedHome={selectedHome}
               onHomeSelect={setSelectedHome}
             />
-            <Telegram />
+            {/* <Telegram /> */}
             <RSVP />
             <PhotoGallery />
             <Wishes />
