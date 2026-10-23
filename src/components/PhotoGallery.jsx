@@ -7,13 +7,13 @@ import TornEdge from './TornEdge.jsx';
 const DEFAULT_IMAGES = [
   {
     id: 11,
-    src: '/assets/image11.avif',
+    src: '/assets/image11.webp',
     alt: 'Ermias and Bethelhem cherished moment 11',
     fit: true,
   },
   {
     id: 12,
-    src: '/assets/image12.avif',
+    src: '/assets/image12.webp',
     alt: 'Ermias and Bethelhem cherished moment 12',
     fit: true,
   },
