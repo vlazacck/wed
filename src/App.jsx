@@ -47,7 +47,7 @@ export default function App() {
         className={`relative transition-opacity duration-700 ${
           opened ? 'opacity-100' : 'opacity-0 pointer-events-none h-0'
         }`}
-        style={{ overflowX: 'clip' }}
+        style={{ overflowX: 'hidden' }}
         aria-hidden={!opened}
       >
         {contentReady && (

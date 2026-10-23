@@ -1,123 +1,255 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useLayoutEffect, useState, useCallback } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import TornEdge from './TornEdge.jsx';
 
-/**
- * SectionFlowers – decorative flower PNG placed in corner(s) of a section.
- *
- * The scale mirror (scaleX / scaleY) lives on a plain inner div, NOT on the
- * motion element (framer-motion's animate.rotate would overwrite style.transform).
- *
- * Props:
- *   size         – base size in px for the flower on desktop (default 180)
- *   opacity      – CSS opacity for subtle blending (default 0.85)
- *   customLayout – object describing which corners to render (default topLeft + topRight)
- *   zIndex       – stacking order (default 25, above TornEdge z-10/z-20)
- *   topOffset    – CSS value pushing top-corner flowers DOWN, e.g. '4.5rem' to clear a fixed header
- *   pull         – px to shift artwork INTO the corner via CSS transform (compensates for PNG
- *                  transparent margins). Container stays at position 0 — transparent overflow
- *                  is invisible and never covers the TornEdge. (default 20)
- */
-export default function SectionFlowers({
-  size = 180,
-  opacity = 0.85,
-  customLayout = null,
-  zIndex = 30,
-  topOffset = 0,
-  bottomOffset = 0,
-  pull = 20,
-  imageSrc = '/assets/flower.webp',
-  images = null,
-  rotations = null,
-}) {
-  const responsiveSize = `clamp(${Math.round(size * 0.5)}px, ${Math.round(size / 4)}vw, ${size}px)`;
+export default function Schedule() {
+  const { t } = useTranslation();
+  const items = t('schedule.items', { returnObjects: true }) || [];
 
-  // Sway animation — applied only to the motion wrapper, NOT to the img
-  const swayAnimate = { rotate: [0, 3, 0] };
-  const swayTransition = { repeat: Infinity, duration: 8, ease: 'easeInOut' };
+  const olRef = useRef(null);
+  const firstDiamondRef = useRef(null);
+  const lastDiamondRef = useRef(null);
 
-  const layout = customLayout || { topLeft: true, topRight: true };
+  // startY / endY are the rose's top offset inside the <ol>
+  const [startY, setStartY] = useState(0);
+  const [endY, setEndY] = useState(0);
 
-  // Container stays at the section corner — never outside it.
-  const wrapperStyle = (corner) => {
-    const topVal = topOffset || 0;
-    const bottomVal = bottomOffset || 0;
-    const positions = {
-      topLeft:     { top: topVal,  left:  0 },
-      topRight:    { top: topVal,  right: 0 },
-      bottomLeft:  { bottom: bottomVal,    left:  0 },
-      bottomRight: { bottom: bottomVal,    right: 0 },
+  const ROSE_SIZE = 52; // px
+
+  const measure = useCallback(() => {
+    if (!olRef.current || !firstDiamondRef.current || !lastDiamondRef.current) return;
+
+    // Calculate exact vertical center relative to ol, immune to any CSS transforms
+    const getMarkerCenter = (elem) => {
+      let top = 0;
+      let curr = elem;
+      let foundOl = false;
+      while (curr) {
+        if (curr === olRef.current) {
+          foundOl = true;
+          break;
+        }
+        top += curr.offsetTop;
+        curr = curr.offsetParent;
+      }
+
+      if (foundOl) {
+        return top + elem.offsetHeight / 2;
+      }
+
+      // Fallback in case offsetParent hierarchy differs
+      const elemRect = elem.getBoundingClientRect();
+      const olRect = olRef.current.getBoundingClientRect();
+      return elemRect.top + elemRect.height / 2 - olRect.top;
     };
-    const origins = {
-      topLeft:     'top left',
-      topRight:    'top right',
-      bottomLeft:  'bottom left',
-      bottomRight: 'bottom right',
-    };
-    return {
-      position: 'absolute',
-      width: responsiveSize,
-      height: 'auto',
-      pointerEvents: 'none',
-      zIndex,
-      margin: 0,
-      padding: 0,
-      ...positions[corner],
-      transformOrigin: origins[corner],
-    };
-  };
 
-  // Inner-div transform = mirror scale  +  translate toward corner.
-  //
-  // We always translate(-pull, -pull) in PRE-SCALE coordinate space.
-  // After each corner's mirror, this resolves to a shift TOWARD that corner:
-  //   topLeft     none          → (-pull, -pull)  ↖
-  //   topRight    scaleX(-1)   → (+pull, -pull)  ↗
-  //   bottomLeft  scaleY(-1)   → (-pull, +pull)  ↙
-  //   bottomRight scale(-1,-1) → (+pull, +pull)  ↘
-  //
-  // Transparent PNG pixels that overflow the section boundary are invisible
-  // and never obscure the TornEdge.
-  const innerTransform = (corner) => {
-    const t = `translate(-${pull}px, -${pull}px)`;
-    return {
-      topLeft:     t,
-      topRight:    `scaleX(-1) ${t}`,
-      bottomLeft:  `scaleY(-1) ${t}`,
-      bottomRight: `scale(-1,-1) ${t}`,
-    }[corner];
-  };
+    const firstCenter = getMarkerCenter(firstDiamondRef.current);
+    const lastCenter = getMarkerCenter(lastDiamondRef.current);
 
-  const corners = ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'];
+    // Offset so the rose image centre aligns precisely with the diamond centre
+    setStartY(firstCenter - ROSE_SIZE / 2);
+    setEndY(lastCenter - ROSE_SIZE / 2);
+  }, []);
+
+  useLayoutEffect(() => {
+    measure();
+
+    if (typeof document !== 'undefined' && document.fonts?.ready) {
+      document.fonts.ready.then(measure);
+    }
+
+    let ro;
+    if (typeof ResizeObserver !== 'undefined' && olRef.current) {
+      ro = new ResizeObserver(() => measure());
+      ro.observe(olRef.current);
+    }
+
+    window.addEventListener('resize', measure);
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [items, measure]);
+
+  // Track scroll progress as the timeline list moves through the viewport
+  const { scrollYProgress } = useScroll({
+    target: olRef,
+    offset: ['start 0.7', 'end 0.5'],
+  });
+
+  // Smooth out raw scroll steps into a fluid glide
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 25,
+    restDelta: 0.001,
+  });
+
+  // Rose Y goes from first diamond centre -> last diamond centre, clamped so it never passes the diamond
+  const roseY = useTransform(smoothProgress, [0, 1], [startY, endY], {
+    clamp: true,
+  });
+
+  // Vertical line connecting diamond 1 to diamond 3
+  const lineTop = startY > 0 ? `${startY + ROSE_SIZE / 2}px` : '0px';
+  const lineBottom =
+    endY > 0 && olRef.current
+      ? `${Math.max(0, olRef.current.offsetHeight - (endY + ROSE_SIZE / 2))}px`
+      : '0px';
 
   return (
-    <>
-      {corners.map((corner) =>
-        layout[corner] ? (
+    <section
+      className="relative bg-[#F8F9FA] px-4 sm:px-6 pt-10 sm:pt-12 pb-28 sm:pb-32 text-center"
+    >
+      {/* ── Title ── */}
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.7 }}
+        className="mt-2 font-script text-3xl sm:text-4xl lg:text-5xl relative z-[40]"
+        style={{ color: '#C5A059', textShadow: '0 1px 2px rgba(197,160,89,0.15)' }}
+      >
+        <span aria-hidden="true" style={{ color: '#C5A059' }}>❧&nbsp;</span>
+        {t('schedule.title')}
+        <span aria-hidden="true" style={{ color: '#C5A059' }}>&nbsp;❧</span>
+      </motion.h2>
+
+      {/* ── Timeline wrapper ── */}
+      <div className="relative z-[40] mx-auto mt-6 sm:mt-8 w-full" style={{ maxWidth: 'clamp(320px, 55vw, 520px)' }}>
+
+        {/* Vertical line (runs cleanly between first and last diamond) */}
+        <div
+          className="absolute"
+          aria-hidden="true"
+          style={{
+            left: 'calc(35% + 0.75rem + 8px)',
+            transform: 'translateX(-50%)',
+            top: lineTop,
+            bottom: lineBottom,
+            width: '1px',
+            background:
+              startY > 0
+                ? 'rgba(197,160,89,0.55)'
+                : 'linear-gradient(to bottom, transparent, rgba(197,160,89,0.55) 8%, rgba(197,160,89,0.55) 92%, transparent)',
+          }}
+        />
+
+        {/* ── List — rose lives inside here so offsets are correct ── */}
+        <ol ref={olRef} style={{ position: 'relative', listStyle: 'none', margin: 0, padding: 0 }}>
+
+          {/* Scrolling rose — absolutely inside <ol> */}
           <motion.div
-            key={corner}
             aria-hidden="true"
-            animate={swayAnimate}
-            transition={swayTransition}
-            style={wrapperStyle(corner)}
+            style={{
+              position: 'absolute',
+              left: 'calc(35% + 0.75rem + 8px)',
+              top: 0,
+              x: '-50%',
+              y: roseY,
+              width: `${ROSE_SIZE}px`,
+              height: `${ROSE_SIZE}px`,
+              zIndex: 30,
+              pointerEvents: 'none',
+            }}
           >
-            {/* Inner div: mirror scale + pull toward corner (translate in pre-scale space) */}
-            <div style={{ transform: innerTransform(corner), width: '100%' }}>
-              <img
-                src={(images && images[corner]) || imageSrc}
-                alt=""
-                draggable="false"
-                style={{
-                  width: '100%',
-                  height: 'auto',
-                  opacity,
-                  display: 'block',
-                  transform: rotations && rotations[corner] ? `rotate(${rotations[corner]})` : undefined,
-                }}
-              />
-            </div>
+            <img
+              src="/assets/schedule-rose.webp"
+              alt=""
+              draggable="false"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                mixBlendMode: 'multiply',
+                filter: 'drop-shadow(0 4px 10px rgba(120,60,60,0.22))',
+              }}
+            />
           </motion.div>
-        ) : null
-      )}
-    </>
+
+          {items.map((item, idx) => (
+            <li
+              key={item.label}
+              style={{
+                position: 'relative',
+                display: 'grid',
+                gridTemplateColumns: '35% auto 1fr',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '1.25rem 0',
+              }}
+            >
+              {/* Time — right-aligned */}
+              <motion.span
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                className="font-display text-right whitespace-pre-line"
+                style={{
+                  fontSize: 'clamp(1.4rem, 3vw, 1.8rem)',
+                  color: '#2D2D2D',
+                  fontWeight: 500,
+                  whiteSpace: 'pre-line',
+                  lineHeight: 1.25,
+                }}
+              >
+                {typeof item.time === 'string' && !item.time.includes('\n')
+                  ? item.time.replace(/^(\d{1,2}:\d{2})\s+(.+)$/, '$1\n$2')
+                  : item.time}
+              </motion.span>
+
+              {/* Diamond marker */}
+              <motion.span
+                ref={idx === 0 ? firstDiamondRef : idx === items.length - 1 ? lastDiamondRef : null}
+                initial={{ opacity: 0, scale: 0.6 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                aria-hidden="true"
+                style={{
+                  position: 'relative',
+                  zIndex: 20,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '16px',
+                  height: '16px',
+                  flexShrink: 0,
+                }}
+              >
+                <span
+                  style={{
+                    display: 'block',
+                    width: '9px',
+                    height: '9px',
+                    background: '#C5A059',
+                    transform: 'rotate(45deg)',
+                    boxShadow: '0 0 0 2px rgba(197,160,89,0.3)',
+                  }}
+                />
+              </motion.span>
+
+              {/* Label — left-aligned */}
+              <motion.span
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                className="font-body text-left"
+                style={{
+                  fontSize: 'clamp(1.3rem, 2.5vw, 1.5rem)',
+                  color: '#2D2D2D',
+                  lineHeight: 1.35,
+                }}
+              >
+                {item.label}
+              </motion.span>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <TornEdge color="#FFFFFF" height="4.5rem" className="!-bottom-" />  
+    </section>
   );
 }
